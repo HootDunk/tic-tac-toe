@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.gameboard {
+    /* outline: 1px solid red; */
+    height: 600px;
+    width: 600px;
+    position: absolute;
+    top: 10%;
+
+}
+.gameboard .square {
+    outline: 1px solid black;
+    float: left;
+    height: 100%;
+    width: 200px;
+    cursor: pointer;
+    font-size: 200px;
+    text-align: center;
+    
+}
+
+
+.gameboard .row {
+    width: 100%;
+    height: 200px;
+    outline: 1px solid black;
+}
+
+header {
+    font-size: 30px;
+    text-align: center;
+}
+
+
+
+/* .gameboard .upper-left {
+    outline: 1px solid red;
+    width: 200px;
+    height: 200px;
+} */
+
