@@ -7,6 +7,8 @@
   <meta name="author" content="">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <link href="css/reset.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
@@ -14,7 +16,28 @@
 <body>
 
   <header>Tic Tac Toe</header>
+  <div class="scoreboard">
+    <div class="player1">
+      <!-- <label for="player1">Player 1 Name:</label>
+      <input type="text"> -->
+      <h1>Player 1 Wins:</h1>
+      <p class="scoreboard-num">0</p>
+
+    </div>
+    <div class="draw">
+      <!-- <input type="submit" value="Submit Names"> -->
+      <h1>Draws:</h1>
+      <p class="scoreboard-num">0</p>
+    </div>
+    <div class="player2">
+      <!-- <label for="player2">Player 2 Name:</label>
+      <input type="text"> -->
+      <h1>Player 2 Wins:</h1>
+      <p class="scoreboard-num">0</p>
+    </div>
+  </div>
   <div class="container">
+
     <div class="gameboard">
       <div class="row">
         <div class="square" data-id="0"></div>
@@ -31,12 +54,18 @@
         <div  class="square" data-id="7" ></div>
         <div  class="square" data-id="8"></div>
       </div>
-      <form>
-        <label for="player1">Player 1 Name:</label>
-        <input type="text">
-        <label for="player1">Player 2 Name:</label>
-        <input type="text">
+
+      <form class="player-form">
+
+          <label for="player1">Player 1 Name:</label>
+          <input type="text">
+          
+          <label for="player2">Player 2 Name:</label>
+          <input type="text">
+
+          <input type="submit" value="Submit Names">
       </form>
+
 
 
 

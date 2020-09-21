@@ -20,7 +20,6 @@ const Gameboard = (() => {
   };  
 })();
 
-console.log(Gameboard.gameBoard)
 
 // displayController houses all functions that affect the display. 
 const displayController = (() => {
@@ -35,17 +34,17 @@ const displayController = (() => {
 
 
     function evaluateClick(square){
-        if ((square.textContent === "") && (Game.winner == false)){
+        if ((square.textContent === "") && (Game.winner == "")){
             let count = Game.counter();
             console.log(count)
             let squareIndex = square.getAttribute('data-id')
             let currentPlayer = Game.getCurrentPlayer(count);
             square.textContent = currentPlayer.marker;
             Gameboard.gameBoard[squareIndex] = currentPlayer.marker;
-
+            //could change the counter so that this only gets called after the first
             Game.checkForWin(currentPlayer);
-            if (count == 8 && Game.winner == false) console.log("It's a tie")
-            else if (Game.winner == true) console.log(`${currentPlayer.name} wins!`)
+            if (!Gameboard.gameBoard.includes("") && Game.winner == "") console.log("It's a tie")
+            else if (Game.winner != "") console.log(`${currentPlayer.name} wins!`)
 
             console.log(Game.winner)
         } 
@@ -84,16 +83,16 @@ const Player = (name, marker) => {
 // Game module is home to functions related to the games functioning. 
 const Game = (() => {
     // let winStatus = false;
-    // Counter is used to determine players turn
+
     const player1 = Player('Josh', "X");
     const player2 = Player("Angela", "O");
-    const winner = false;
+    const winner = "";
 
     let count = 0;
-    //fix counter so that it resets the number properly after each game.
+    // Counter is used to determine players turn.  May change it to just alternate each player. 
     const counter = (() => {
         let num = count++;
-        if (num != 9) return num;
+        if (num != 2) return num;
         //resets the counter variable
         else{
             count = 0;
@@ -102,14 +101,14 @@ const Game = (() => {
 
         
     });
-
+    // may also want to switch from Game.winner to changing the winner from blank string to the winner player. 
     const checkForWin = ((currentPlayer) => {
 
         if (
             Gameboard.gameBoard[0] == currentPlayer.marker && 
             Gameboard.gameBoard[1] == currentPlayer.marker && 
             Gameboard.gameBoard[2] == currentPlayer.marker) {
-                Game.winner = true;
+                Game.winner = currentPlayer;
             }
             
         else if (
@@ -183,3 +182,8 @@ const Game = (() => {
 displayController.addSquareEvent()
 
 
+// need to add style
+// then connect the new elements to the game (name input and scoreboard)
+// also have it say who goes first and switch of after each round
+
+// once all of that is added look into adding the AI. 
