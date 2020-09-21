@@ -31,12 +31,11 @@ const displayController = (() => {
         squares.forEach(square => square.addEventListener("click", () => {
                 evaluateClick(square)
             }));
-
     });
 
 
     function evaluateClick(square){
-        if ((square.textContent === "") && (player1.winner == false) && (player2.winner == false)){
+        if ((square.textContent === "") && (Game.winner == false)){
             let count = Game.counter();
             console.log(count)
             let squareIndex = square.getAttribute('data-id')
@@ -44,23 +43,17 @@ const displayController = (() => {
             square.textContent = currentPlayer.marker;
             Gameboard.gameBoard[squareIndex] = currentPlayer.marker;
 
-            let winStatus = Game.checkForWin(currentPlayer);
-            if (count == 8 && winStatus == false) console.log("It's a tie")
-            else if (winStatus == true) console.log(`${currentPlayer.name} wins!`)
+            Game.checkForWin(currentPlayer);
+            if (count == 8 && Game.winner == false) console.log("It's a tie")
+            else if (Game.winner == true) console.log(`${currentPlayer.name} wins!`)
+
+            console.log(Game.winner)
         } 
         else{
             return;
         }
     }
-    // const getCurrentPlayer = ((count) => {
-    //     if (count % 2 == 0){
-    //         return player1;
 
-    //     }
-    //     else{
-    //         return player2;
-    //     }
-    // })
 
     const resetBoard = () => {
         Gameboard.gameBoard = [
@@ -70,6 +63,7 @@ const displayController = (() => {
         ];
         //writes an empty string to each square (doesn't really need to base it off of the index)
         squares.forEach((square, index) => square.textContent = `${Gameboard.gameBoard[index]}`)
+        Game.winner = false;
     }
 
     return {
@@ -91,7 +85,9 @@ const Player = (name, marker) => {
 const Game = (() => {
     // let winStatus = false;
     // Counter is used to determine players turn
-
+    const player1 = Player('Josh', "X");
+    const player2 = Player("Angela", "O");
+    const winner = false;
 
     let count = 0;
     //fix counter so that it resets the number properly after each game.
@@ -103,71 +99,63 @@ const Game = (() => {
             count = 0;
             return count++;
         }
+
         
     });
 
     const checkForWin = ((currentPlayer) => {
-        let winStatus = false;
+
         if (
             Gameboard.gameBoard[0] == currentPlayer.marker && 
             Gameboard.gameBoard[1] == currentPlayer.marker && 
             Gameboard.gameBoard[2] == currentPlayer.marker) {
-                // displayController.removeSquareEvent()
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
             
         else if (
             Gameboard.gameBoard[3] == currentPlayer.marker && 
             Gameboard.gameBoard[4] ==currentPlayer.marker && 
             Gameboard.gameBoard[5] == currentPlayer.marker) {
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
             
         else if (
             Gameboard.gameBoard[6] == currentPlayer.marker &&
             Gameboard.gameBoard[7] == currentPlayer.marker && 
             Gameboard.gameBoard[8] == currentPlayer.marker) {
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
         else if (
             Gameboard.gameBoard[0] == currentPlayer.marker &&
             Gameboard.gameBoard[3] == currentPlayer.marker && 
             Gameboard.gameBoard[6] == currentPlayer.marker){
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
         else if (
             Gameboard.gameBoard[1] == currentPlayer.marker &&
             Gameboard.gameBoard[4] == currentPlayer.marker && 
             Gameboard.gameBoard[7] == currentPlayer.marker){
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
         else if (
             Gameboard.gameBoard[2] == currentPlayer.marker &&
             Gameboard.gameBoard[5] == currentPlayer.marker && 
             Gameboard.gameBoard[8] == currentPlayer.marker) {
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
         else if (
             Gameboard.gameBoard[0] == currentPlayer.marker &&
             Gameboard.gameBoard[4] == currentPlayer.marker && 
             Gameboard.gameBoard[8] == currentPlayer.marker) {
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
         else if (
             Gameboard.gameBoard[2] == currentPlayer.marker &&
             Gameboard.gameBoard[4] == currentPlayer.marker && 
             Gameboard.gameBoard[6] == currentPlayer.marker) {
-                currentPlayer.winner = true;
-                return winStatus = true;
+                Game.winner = true;
             }
-        else return winStatus;
+
     });
 
     // Retrieves the player object for whoever's turn it is
@@ -181,16 +169,17 @@ const Game = (() => {
     });
 
     return {
+        player1,
+        player2,
         checkForWin,
         getCurrentPlayer,
         counter,
-
+        winner,
     }
 })();
 
 
-const player1 = Player('Josh', "X");
-const player2 = Player("Angela", "O");
+
 displayController.addSquareEvent()
 
 
