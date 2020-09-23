@@ -21,19 +21,19 @@
       <!-- <label for="player1">Player 1 Name:</label>
       <input type="text"> -->
       <h1>Player 1 Wins:</h1>
-      <p class="scoreboard-num">0</p>
+      <p class="scoreboard-num" id="#player1-num">0</p>
 
     </div>
     <div class="draw">
       <!-- <input type="submit" value="Submit Names"> -->
       <h1>Draws:</h1>
-      <p class="scoreboard-num">0</p>
+      <p class="scoreboard-num" id="#draw-num">0</p>
     </div>
     <div class="player2">
       <!-- <label for="player2">Player 2 Name:</label>
       <input type="text"> -->
       <h1>Player 2 Wins:</h1>
-      <p class="scoreboard-num">0</p>
+      <p class="scoreboard-num" id="#player2-num">0</p>
     </div>
   </div>
   <div class="container">
@@ -55,29 +55,20 @@
         <div  class="square" data-id="8"></div>
       </div>
 
-      <form class="player-form">
-
-          <label for="player1">Player 1 Name:</label>
-          <input type="text">
-          
-          <label for="player2">Player 2 Name:</label>
-          <input type="text">
-
-          <input type="submit" value="Submit Names">
-      </form>
-
-
-
-
-
-
-
-
 
 
     </div>
-  </div>
+    <form id="player-form">
 
+      <label for="player1">Player 1 Name:</label>
+      <input name="player1Text" type="text">
+      
+      <label for="player2">Player 2 Name:</label>
+      <input name="player2Text" type="text">
+  
+      <input id="submit" type="button" value="Submit Names">
+  </form>
+  </div>
 
   <script src="script.js"></script>
 </body>

@@ -16,7 +16,6 @@ const Gameboard = (() => {
 // don't need the brackets but keeping them for now
   return {
     gameBoard,
-    // resetBoard
   };  
 })();
 
@@ -24,7 +23,7 @@ const Gameboard = (() => {
 // displayController houses all functions that affect the display. 
 const displayController = (() => {
     const squares = document.querySelectorAll(".square");
-
+    
     const addSquareEvent = (() => {
         squares.forEach((square, index) => square.textContent = `${Gameboard.gameBoard[index]}`)
         squares.forEach(square => square.addEventListener("click", () => {
@@ -32,26 +31,69 @@ const displayController = (() => {
             }));
     });
 
+    const addSubmitEvent = (() => {
+        const submitBtn = document.querySelector("#submit");
+        submitBtn.addEventListener('click', () => {
+            let player1Name = document.querySelector("[name='player1Text']").value;
+            let player2Name = document.querySelector("[name='player2Text']").value;
+            Game.player1.name = player1Name;
+            Game.player2.name = player2Name;
+            document.getElementById("player-form").style.visibility = "hidden";
+            displayController.addSquareEvent();
+        });
+        
+    });
+
 
     function evaluateClick(square){
         if ((square.textContent === "") && (Game.winner == "")){
             let count = Game.counter();
-            console.log(count)
+            // console.log(count)
             let squareIndex = square.getAttribute('data-id')
             let currentPlayer = Game.getCurrentPlayer(count);
             square.textContent = currentPlayer.marker;
             Gameboard.gameBoard[squareIndex] = currentPlayer.marker;
-            //could change the counter so that this only gets called after the first
+            //could change the counter so that this only gets called after the first 4
             Game.checkForWin(currentPlayer);
-            if (!Gameboard.gameBoard.includes("") && Game.winner == "") console.log("It's a tie")
-            else if (Game.winner != "") console.log(`${currentPlayer.name} wins!`)
 
-            console.log(Game.winner)
+            if (!Gameboard.gameBoard.includes("") && Game.winner == "") {
+                //winner/draw display call goes here
+                console.log("It's a tie")
+                updateScoreBoard("draw")
+            }
+            else if (Game.winner != ""){
+                //need to build the display to declare who wins here and make the method call show up here.
+                console.log(`${currentPlayer.name} wins!`)
+                // console.log(currentPlayer.playerNum)
+                updateScoreBoard(currentPlayer.playerNum)
+            }
+
+            
         } 
         else{
             return;
         }
     }
+
+    const updateScoreBoard = (scoreboardID) => {
+        if (scoreboardID == "player1"){
+            const player1Para = document.getElementById('#player1-num');
+            let player1WinCount = ++player1Para.textContent;
+            player1Para.textContent = player1WinCount;
+            
+        }
+        else if (scoreboardID == "player2"){
+            const player2Para = document.getElementById('#player2-num')
+            let player2WinCount = ++player2Para.textContent;
+            player2Para.textContent = player2WinCount;
+        }
+        else if (scoreboardID = "draw"){
+            console.log("get draw num")
+            const drawPara = document.getElementById("#draw-num");
+            let drawCount = ++drawPara.textContent;
+            drawPara.textContent = drawCount;
+        }
+    };
 
 
     const resetBoard = () => {
@@ -67,25 +109,25 @@ const displayController = (() => {
 
     return {
         addSquareEvent,
-        // removeSquareEvent,
         resetBoard,
+        addSubmitEvent
     }
 
 })();
 
 // A factory function to create the players
-const Player = (name, marker) => {
+const Player = (name, marker, playerNum) => {
     const sayName = () => console.log(`my name is ${name}`)
     const winner = false;
-    return {sayName, winner, marker, name} 
+    return {sayName, winner, marker, name, playerNum} 
 };
 
 // Game module is home to functions related to the games functioning. 
 const Game = (() => {
     // let winStatus = false;
 
-    const player1 = Player('Josh', "X");
-    const player2 = Player("Angela", "O");
+    const player1 = Player('', "X", "player1");
+    const player2 = Player("", "O", "player2");
     const winner = "";
 
     let count = 0;
@@ -98,8 +140,6 @@ const Game = (() => {
             count = 0;
             return count++;
         }
-
-        
     });
     // may also want to switch from Game.winner to changing the winner from blank string to the winner player. 
     const checkForWin = ((currentPlayer) => {
@@ -177,13 +217,20 @@ const Game = (() => {
     }
 })();
 
+//yay it works now.  going to have to look into the submit button.
+// Also, these need to be moved out of the global namespace later. 
+displayController.addSubmitEvent();
 
 
-displayController.addSquareEvent()
+// Create the update scoreboard feature so that player names are updated.
+// also have the form have a default value for player 1 and player 2 if nothing is inputted. 
+
+
+
 
 
 // need to add style
 // then connect the new elements to the game (name input and scoreboard)
-// also have it say who goes first and switch of after each round
+// also have it say who goes first and switch off after each round
 
 // once all of that is added look into adding the AI. 
