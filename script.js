@@ -11,8 +11,6 @@ const Gameboard = (() => {
         "", "", "",
         "", "", ""
     ]
-
-
 // don't need the brackets but keeping them for now
   return {
     gameBoard,
@@ -48,7 +46,6 @@ const displayController = (() => {
     function evaluateClick(square){
         if ((square.textContent === "") && (Game.winner == "")){
             let count = Game.counter();
-            // console.log(count)
             let squareIndex = square.getAttribute('data-id')
             let currentPlayer = Game.getCurrentPlayer(count);
             square.textContent = currentPlayer.marker;
@@ -64,11 +61,8 @@ const displayController = (() => {
             else if (Game.winner != ""){
                 //need to build the display to declare who wins here and make the method call show up here.
                 console.log(`${currentPlayer.name} wins!`)
-                // console.log(currentPlayer.playerNum)
                 updateScoreBoard(currentPlayer.playerNum)
             }
-
-            
         } 
         else{
             return;
@@ -95,6 +89,14 @@ const displayController = (() => {
         }
     };
 
+    const clearBoardEvent = () => {
+        // const clearBtn = document.getElementById("#clear-board");
+        const clearBtn = document.querySelector("#clear-board");
+        clearBtn.addEventListener('click', () => {
+            resetBoard();
+        })
+    }
+
 
     const resetBoard = () => {
         Gameboard.gameBoard = [
@@ -110,7 +112,8 @@ const displayController = (() => {
     return {
         addSquareEvent,
         resetBoard,
-        addSubmitEvent
+        addSubmitEvent,
+        clearBoardEvent,
     }
 
 })();
@@ -128,6 +131,7 @@ const Game = (() => {
 
     const player1 = Player('', "X", "player1");
     const player2 = Player("", "O", "player2");
+    //maybe change this to win status for clarity
     const winner = "";
 
     let count = 0;
@@ -220,6 +224,7 @@ const Game = (() => {
 //yay it works now.  going to have to look into the submit button.
 // Also, these need to be moved out of the global namespace later. 
 displayController.addSubmitEvent();
+displayController.clearBoardEvent();
 
 
 // Create the update scoreboard feature so that player names are updated.
@@ -228,9 +233,8 @@ displayController.addSubmitEvent();
 
 
 
-
-// need to add style
-// then connect the new elements to the game (name input and scoreboard)
+// need to add a reset board button and connect it to the function
+// also add a complete reset button.
 // also have it say who goes first and switch off after each round
 
 // once all of that is added look into adding the AI. 
