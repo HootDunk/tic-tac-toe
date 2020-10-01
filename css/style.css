@@ -31,13 +31,12 @@ body{
     font-family: monospace;
     /* color:  rgb(0, 255, 100); */
     color:  #f0fff8;
-    
-    
-    
 }
+
 label {
     text-align: left;
 }
+
 input {
     
     outline: white;

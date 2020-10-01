@@ -36,6 +36,14 @@ const displayController = (() => {
             let player2Name = document.querySelector("[name='player2Text']").value;
             Game.player1.name = player1Name;
             Game.player2.name = player2Name;
+            if(Game.player1.name != ""){
+                const player1name = document.getElementById('#player1-name');
+                player1name.textContent = `${Game.player1.name} Wins:`;
+            }
+            if(Game.player2.name != ""){
+                const player2name = document.getElementById('#player2-name');
+                player2name.textContent = `${Game.player2.name} Wins:`;
+            }
             document.getElementById("player-form").style.visibility = "hidden";
             displayController.addSquareEvent();
         });
@@ -82,7 +90,6 @@ const displayController = (() => {
             player2Para.textContent = player2WinCount;
         }
         else if (scoreboardID = "draw"){
-            console.log("get draw num")
             const drawPara = document.getElementById("#draw-num");
             let drawCount = ++drawPara.textContent;
             drawPara.textContent = drawCount;
