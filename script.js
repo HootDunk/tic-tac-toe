@@ -14,7 +14,7 @@ const Gameboard = (() => {
 // don't need the brackets but keeping them for now
   return {
     gameBoard,
-  };  
+  };
 })();
 
 
@@ -45,12 +45,12 @@ const displayController = (() => {
                 player2name.textContent = `${Game.player2.name} Wins:`;
             }
             document.getElementById("player-form").style.visibility = "hidden";
-            displayController.addSquareEvent();
+            addSquareEvent();
         });
         
     });
 
-
+    // add a 'take a turn function' or something and have one for if 2 humans and one for human vs AI
     function evaluateClick(square){
         if ((square.textContent === "") && (Game.winner == "")){
             let count = Game.counter();
@@ -71,7 +71,7 @@ const displayController = (() => {
                 console.log(`${currentPlayer.name} wins!`)
                 updateScoreBoard(currentPlayer.playerNum)
             }
-        } 
+        }
         else{
             return;
         }
@@ -154,7 +154,7 @@ const Game = (() => {
     });
     // may also want to switch from Game.winner to changing the winner from blank string to the winner player. 
     const checkForWin = ((currentPlayer) => {
-
+        //Check for Row wins
         if (
             Gameboard.gameBoard[0] == currentPlayer.marker && 
             Gameboard.gameBoard[1] == currentPlayer.marker && 
@@ -175,6 +175,7 @@ const Game = (() => {
             Gameboard.gameBoard[8] == currentPlayer.marker) {
                 Game.winner = true;
             }
+        //Check for Column wins
         else if (
             Gameboard.gameBoard[0] == currentPlayer.marker &&
             Gameboard.gameBoard[3] == currentPlayer.marker && 
@@ -193,6 +194,7 @@ const Game = (() => {
             Gameboard.gameBoard[8] == currentPlayer.marker) {
                 Game.winner = true;
             }
+        //Check for Diagonal Wins
         else if (
             Gameboard.gameBoard[0] == currentPlayer.marker &&
             Gameboard.gameBoard[4] == currentPlayer.marker && 
@@ -228,20 +230,155 @@ const Game = (() => {
     }
 })();
 
-//yay it works now.  going to have to look into the submit button.
-// Also, these need to be moved out of the global namespace later. 
+
+const computerPlayer = (() => {
+        //Evaluates all possible ways the game can go and
+    // Returns the value of the board
+    let minimax = (gameBoard, depth, isMax) => {
+
+        let score = evaluate(gameBoard);
+
+        // If Maximizer or Minimizer has won the game
+        // return his/her evaluated score
+        // If Maximizer has won the game return his/her evaluated score 
+        if (score === 10) return score - depth;
+
+        // If Minimizer has won the game return his/her evaluated score 
+        if (score === -10) return score + depth;
+
+        //If there are no more moves and no winner then it is a tie
+        if (areMovesLeft(gameBoard) == false) return 0;
+        
+        if (isMax){
+            let best = -1000;
+            // Go over each cell
+            for (let i = 0; i < 9; i++){
+                //If cell is empty
+                if(gameBoard[i] == ""){
+                    // place the player marker there ('X')
+                    gameBoard[i] = player;
+                    // Call minmax recursively and choose the max value
+                    best = Math.max(best, minimax(gameBoard, depth + 1, !isMax));
+
+                    // Undo the move
+                    gameBoard[i] = "";
+                }
+            }
+            // return best - depth;
+            return best;
+        }
+        // If minimizer's move
+        else{
+            let best = 1000;
+
+            // Go over each cell
+            for (let i = 0; i < 9; i++){
+                //Check if cell is empty
+                if (gameBoard[i] == ""){
+                    // Make the move
+                    gameBoard[i] = opponent;
+
+                    // Call the minimax recursively and choose the minimum value
+                    best = Math.min(best, minimax(gameBoard, depth + 1, !isMax))
+
+                    // Undo the move
+                    gameBoard[i] = "";
+                }
+            }
+            // return best + depth;
+            return best;
+        }
+    };
+
+    let findBestMove = (gameBoard) => {
+        let bestVal = 1000;
+        let bestMove = -1;
+        // Go over each cell, evaluate minimax function for all empty cells
+        // Return the cell with the optimal value
+        for (let i = 0; i < 9; i++){
+            if(gameBoard[i] == ""){
+                gameBoard[i] = opponent;
+
+                let moveVal = minimax(gameBoard, 0, true);
+
+                gameBoard[i] = "";
+
+                if(moveVal < bestVal){
+                    bestMove = i;
+                    bestVal = moveVal;
+                }
+            }
+        }
+        console.log(`The value of the best move is ${bestVal}`);
+
+        return bestMove;
+    }
+
+    // "X is player and O is opponent"
+    //Change logic next time.
+    let evaluate = (gameBoard) => {
+        let m = 0;
+        // Checking Rows for X or O victory.
+        for (let n = 0; n < 3; n++){
+            m = n;
+            if(m == 1) m = 3;
+            else if(m == 2) m = 6;
+
+            if(gameBoard[m] == gameBoard[m+1] && gameBoard[m+1] == gameBoard[m+2]){
+                if(gameBoard[m] == 'X') return 10;
+                else if (gameBoard[m] == 'O') return -10;
+            }
+        }
+        // Checking Columns for X or O victory.
+        for (let n = 0; n < 3; n++){
+            if(gameBoard[n] == gameBoard[n+3] && gameBoard[n+3] == gameBoard[n+6]){
+                if(gameBoard[n] == 'X') return 10;
+                else if(gameBoard[n] == 'O') return -10;
+            }
+        }
+        // Checking Diagonals for X or O victory.
+        if(gameBoard[0] == gameBoard[4] && gameBoard[4] == gameBoard[8]){
+            if(gameBoard[0] == 'X') return 10;
+            else if(gameBoard[0] == 'O') return -10;
+        }
+        if(gameBoard[2] == gameBoard[4] && gameBoard[4] == gameBoard[6]){
+            if(gameBoard[2] == 'X') return 10;
+            else if(gameBoard[2] == 'O') return -10;
+        }
+
+        // Else if none of them have won then return 0
+        return 0;
+
+    };
+
+    //finds Log n in base 2
+    // let log2 = (n) => {
+    //     return (n == 1)? 0 : 1 + log2(n/2);
+    // };
+
+    let areMovesLeft = (gameBoard) => {
+        // if moves are left (blank strings in array) return true
+        if(gameBoard.includes("")) return true;
+        // if moves are not left (no blank strings in array) return false
+        else if (!gameBoard.includes("")) return false;
+    }
+
+
+    // can make these variables within the AI factory method based on the player
+    let player = "X";
+    // opponent is actually the computer player variable. will need to change in the future.
+    let opponent = "O";
+
+  return {
+    findBestMove,
+  };  
+})();
+
+
 displayController.addSubmitEvent();
 displayController.clearBoardEvent();
 
 
-// Create the update scoreboard feature so that player names are updated.
-// also have the form have a default value for player 1 and player 2 if nothing is inputted. 
-
-
-
-
-// need to add a reset board button and connect it to the function
-// also add a complete reset button.
-// also have it say who goes first and switch off after each round
-
-// once all of that is added look into adding the AI. 
+// Need to make changes and add functions for whether the end user is playing 
+// someone else or the AI.  AI moves need to be added into the turn based functioning
+// of the current program.
